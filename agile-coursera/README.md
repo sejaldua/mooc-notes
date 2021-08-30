@@ -116,3 +116,29 @@ Jira = software used to help manage, develop, and communicate about work
     - maintenance development
     - new hire funnel
   - supports multi-team and multi-project workflows
+- in Jira, the kanban backlog can be separated from the kanban board, simplifying the kanban board and allowing separate backlog work
+
+### Limit Work in Progress (WIP)
+
+- How?
+  - Specify the minimum and/or maximum number of issues allowed in certain Kanban board columns
+- Why?
+  - Better flow
+  - Limits waste
+
+### Pulling vs Pushing Work
+
+- performers either push work to the next step or pull from the previous work step
+
+### Agile Reports
+
+- advantages
+  - visualize the work
+  - promote transparency
+  - aid troubleshooting and continuous improvement
+  - aid planning and estimating
+- popular report: Cumulative Flow Diagram
+  - shows number of issues in each status over time
+- another report: Cycle Time Control Chart
+  - lead time = time from issue creation to completion
+  - cycle time = time from starting work on an issue to completion
