@@ -68,3 +68,5 @@ Hack:
 ```scala
 val `my.string` = "hello"
 ```
+
+- booleans: `true`, `false`
