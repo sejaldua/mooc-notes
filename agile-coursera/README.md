@@ -576,3 +576,20 @@ Benefits:
 - use parentheses to set Boolean operator precedence and improve query readability
   - 1. parentheses take precedence
   - 2. AND normally has precedence over OR
+
+### Filters
+
+- filters = saved searches which allow you to quickly execute a search
+- execute search > save as > name filter
+- details > access > edit permissions
+
+#### Board Filters
+
+- every board has a filter that defines the issues shown on the board
+- can edit the board's filter
+- if you create a board, you might assign it to a filter
+- a board filter can be used to show issues from multiple projects on a single board
+
+#### Quick Filters
+
+- can be used to refine reports
