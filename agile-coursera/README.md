@@ -451,3 +451,128 @@ Benefits:
   - described a lightweight alternative to waterfall software development
   - applies to any type of project
 - terms are often used interchangeably
+
+## Week 3
+
+### Quick Search and Basic Search
+
+- viewing a project's progress
+  - boards
+  - search
+  - reports
+  - dashboards
+
+- searching
+  - 1. **quick search**: text search of issues, boards, projects, and filters
+    - behavior is similar in cloud version and server version
+    - can use `NOT` keyword to exclude terms
+    - can use `OR` keyword to search for items containing one term or another
+    - `AND` is assumed between keywords and doesn't do anything
+  - 2. **basic search**: uses interface elements to search for issues
+    - textbox
+    - can select more dropdown to search other fields such as priority or date
+  - 3. **advanced search (JQL)**: text-based search called JQL to search for issues
+  - 4. **filters**: convenient saved searches
+  - 5. **quick filters**: limit the issues that are visible on a board
+
+- why is searching important?
+  - adapt your jira experience to your team's processes
+
+### JQL
+
+#### Basic and Advanced JQL Search
+
+- click on "Switch to JQL" link
+- `project = PROJ order by lastViewed DESC`
+  - `project = PROJ`: select a subset of issues
+  - `order by created DESC`: order the results
+- JQL = Jira Query Language
+  - search issues only
+- basic search
+  - user friendly interface
+  - queries can be complex
+- advanced search
+  - uses JQL
+  - most powerful search method
+  - JQL can be used in automation scripts
+- "writing" JQL - the easiest way: let Jira write it for you
+
+#### JQL with Autocomplete
+
+- shows up to 15 matches
+- syntax help points you to documentation for advanced search
+- after project is entered, suggested operators show up
+- then select another project
+- automatically add order by clause by clicking on a column to sort by
+- advanced search fields reference to learn more!
+
+#### Order By
+
+- simplest JQL statement: ''
+- `order by key DESC` returns same results
+- can search by two columns, but order of columns matters
+
+#### Functions
+
+- issue selection clauses
+  - `<field name> <operator> <field value>`
+  - `project = projectA`
+  - `<field name> <operator> <function>`
+  - `assignee = currentUser()`
+- time functions
+  - `now()`
+- time unit qualifier
+  - created in the last 2 days (48 hours)
+    - `created > -2d`
+  - created since the start of day 2 days ago
+    - `created > startOfDay(-2d)`
+  - created since the 15th of this month
+    - `created > startOfMonth(+14d)`
+
+#### Operator
+
+- can use operator autocomplete by entering field name and then pressing space bar
+- `=` (equals)
+- `!=` (not equals)
+- `>` (greater than)
+- `>=` (greater than or equals)
+- `<` (less than)
+- `<=` (less than or equals)
+- `in` and `not in` *used with comma-separated list of values in JQL*
+- `is` and `is not` *can only be followed by EMPTY or NULL*
+- `~` and `!~` *used with text fields only*
+  - searching text fields using JQL
+    - `text ~ "item NOT 2"`
+- `was in` and `was not in` *issue had a field value from a set of values*
+  - predicates for `was` related operators
+    - `AFTER "date"`
+    - `BEFORE "date"`
+    - `DURING ("date1", "date2")`
+    - `ON "date"`
+    - `BY "username"`
+  - find all issues moved to teh Done status by the current user in the past month
+    - `status was Done BY currentUser() AFTER -1M`
+- `changed` *issues have a field value that has changed*
+  - additional predicates for `changed` operator
+    - `FROM "oldvalue"`
+    - `TO "newvalue"
+  - example
+    - `status changed FROM "Done" TO "In Progress"
+
+#### Boolean Operators
+
+- `AND`
+  - `assignee = currentUser() AND status = "In Progress"`
+- `OR`
+  - `status = "Selected for Development" OR status = "In Progress"`
+  - `status in ("Selected for Development", "In Progress")`
+- `NOT`
+  - `NOT status = Backlog`
+  - `status != Backlog`
+
+- find unresolved issues in all projects except SampleA
+  - `resolution = Unresolved AND NOT project = SampleA`
+
+- use parentheses to set Boolean operator precedence and improve query readability
+  - 1. parentheses take precedence
+  - 2. AND normally has precedence over OR
