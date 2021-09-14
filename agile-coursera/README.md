@@ -185,7 +185,7 @@ Jira = software used to help manage, develop, and communicate about work
       - why have a sprint goal?
         - 1. provides coherence to the product increment
         - 2. enables flexibility with the sprint backlog
-    - sprint board = only contains issues from teh sprint backlog
+    - sprint board = only contains issues from the sprint backlog
       - often called kanban boards
     - reports
       - why agile reports?
@@ -194,7 +194,7 @@ Jira = software used to help manage, develop, and communicate about work
         - aid troubleshooting and continuous improvement
         - aid planning and estimating
       - common scrum reports
-        - *burndown chart*: shoes the progress that the team makes during a sprint
+        - *burndown chart*: shows the progress that the team makes during a sprint
         - *sprint report*: summary of the sprint (generic)
         - *velocity chart*: shows the estimated and actual velocity of the team over time
           - velocity = rate at which team accomplishes work (units vary) per sprint
@@ -313,4 +313,141 @@ Benefits:
 2. trust team members to make decisions
 3. improves team satisfaction
 
+#### Focus on Value
+
+- eliminate waste
+- continuously strive for simplicity
+- don't compromise on quality
+
 #### Visualize Work
+
+- visual control: Toyota uses kanbans to signal and control the work
+- andon board: an information board that shows any existing problems
+
+#### Map the Value Stream
+
+1. draw the current state
+2. draw the desired future state
+3. iterate toward the future state
+
+#### Types of Waste
+
+- overproduction
+- waiting
+- transportation
+- processing
+- inventory
+- movement
+- making defective products
+
+#### Experiment using the scientific method
+
+1. continuously learn and improve
+2. embrace change
+
+#### Improve the "flow" of value
+
+1. improve the whole system
+2. map the value stream
+3. limit work in progress
+4. pull work
+5. eliminate waste
+6. reduce setup times
+7. automate what should be automated
+
+#### Build quality in
+
+1. the process should identify problems
+2. fix problems when they are discovered
+3. identify and fix the root cause
+
+### Agile Principles
+
+#### Agile Manifesto
+
+- **individuals and interactions** > processes and tools
+  - *empower the team*
+    - select motivated individuals
+    - teams should self-organize
+    - collaborate to create shared understanding
+- **working software** > comprehensive documentation
+  - *plan, develop, and deliver incrementally*
+    - prefer conversations for conveying information
+    - continuously refactor to maintain agility
+    - maintain a sustainable pace
+    - completed work items are the primary measure of progress
+- **customer collaboration** > contract negotiation
+  - *partner with the customer*
+- **responding to change** > following a plan
+  - *embrace change*
+    - partner with the customer
+    - obtain fast feedback
+    - continuously inspect and adapt
+
+#### 12 Agile Principles
+
+> 1. "Our highest priority is to satisfy the customer through early and continuous delivery of valuable software"
+
+- plan, develop, and deliver incrementally
+- obtain fast feedback
+- focus on value
+
+> 2. "Welcome changing requirements, even late in development. Agile processes harness change for the customer's competitive advantage."
+
+- embrace change; it provides a competitive advantage
+
+> 3. "Deliver working software frequently, from a couple of weeks to a couple of months, with a preference to the shorter timescale."
+
+- plan, develop, and deliver incrementally... with a preference to a higher frequency
+- obtain fast feedback
+
+> 4. "Business people and developers must work together daily throughout the project."
+
+- collaborate to create shared understanding
+
+> 5. "Build projects around motivated individuals. Give them the environment and support they need, and trust them to get the job done."
+
+- select motivated individuals
+- empower the team
+
+> 6. "The most efficient and effective method of conveying information to and within a development team is face-to-face conversation."
+
+- prefer conversations for conveying information
+
+> 7. "Working software is the primary measure of progress."
+
+- completed work items are the primary measure of progress
+
+> 8. "Agile processes promote sustainable development. THe sponsors, developers, and users should be able to maintain a constant pace indefinitely."
+
+- maintain a sustainable pace; it is a byproduct of the proper use of agile processes
+
+> 9. "Continuous attention to technical excellence and good design enhances agility."
+
+- don't compromise on quality
+- continuously refactor to maintain agility
+
+> 10. "Simplicity--the art of maximizing the amount of work not done--is essential."
+
+- continuously strive for simplicity
+- focus on value, eliminate waste
+
+> 11. "The best architectures, requirements, and designs emerge from self-organizing teams."
+
+- teams should self-organize; it results in the best outcome
+
+> 12. "At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behavior accordingly."
+
+- continuously inspect and adapt
+
+#### Lean vs. Agile
+
+- Lean
+  - used at MIT by John Krafcik (1988)
+  - describes the ideas of the Toyota Production System
+  - applies to any type of project
+- Agile
+  - used by the participants who created the Agile Manifesto (2001)
+  - described a lightweight alternative to waterfall software development
+  - applies to any type of project
+- terms are often used interchangeably
