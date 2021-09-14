@@ -593,3 +593,64 @@ Benefits:
 #### Quick Filters
 
 - can be used to refine reports
+
+### Issue Types
+
+- issue = generic name for unit of work
+- issue type field is used to differentiate types of work
+  - **Story** = requirement from the user's perspective
+  - **Task** = team work item
+  - **Bug** = a flaw that needs to be fixed
+  - **Epic** = a big issue that can contain issues
+  - **Subtask** = part of another issue
+  - can create *custom* issue types
+
+- why issue types?
+  - support different types of work items
+  - each type can have different fields, screens, and workflows
+  - can report on types separately
+
+#### Subtasks
+
+- an issue type that must have a parent issue
+- allow an issue to be broken down into individually manageable tasks
+- can be more technical than the parent issue
+  
+Subtask Characteristics
+
+- have their own issue key and fields
+- have independent workflow status
+- can be converted to other types of issues
+
+#### Issue Type Scheme
+
+- an issue type scheme may apply to more than one project
+- a collection of issue types used by projects is called an issue type scheme
+- Jira allows you to customize issue types for each project
+
+#### Swimlane
+
+- allows you to horizontally organize issues with certain characteristics on a board
+- configured using "Swimlanes" tab under board settings
+- can be configured on boards using any field, including issue type
+
+### Configuring Issues
+
+#### Labels
+
+- a field used to categorize and search for issues
+- can have multiple labels per issue
+- can be added to new issue or existing issue
+- if you click on label, Jira will take you to search page with all issues containing label
+- an issue does not have to have a label
+
+#### Configuring Screens
+
+- screens display context-appropriate fields for an issue
+- project administrators and Jira administrators can configure screens for all project members
+
+#### Custom Fields
+
+- default fields should be used whenever possible
+- common example: acceptance criteria
+- must select a custom field type
