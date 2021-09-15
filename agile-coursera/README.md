@@ -654,3 +654,73 @@ Subtask Characteristics
 - default fields should be used whenever possible
 - common example: acceptance criteria
 - must select a custom field type
+
+## Week 4
+
+### Epics
+
+- epic = a large issue
+- can span multiple iterations, projects, teams, and boards
+- can be a placeholder for many issues
+- can contain other issues
+
+why epics?
+
+- organization of work
+- span multiple iterations
+- simplifies backlog (one story)
+  
+### Versions
+
+- version = a set of issues from a project that are usually considered to be a single product update
+  - also called a *release*
+
+why versions?
+
+- organizes issues
+- helps schedule releases
+- sets a release goal
+- can be used in queries and reports
+- removes done issues from kanban boards
+
+- the `fixVersion` FIELD
+  - if the `fixVersion` field of an issue has a value, the issue belongs to a version
+  - `fixVersion` - version the issue is completed or fixed
+  - `affectsVersion` - version that contains the "bug"
+
+- version status
+  - **unreleased**: a set of issues in preparation for a release
+  - **released**: a set of delivered issues
+  - **archived**: a historic set of delivered issues
+    - hides this version from the user interface and release reports
+
+*NOTE: issues in all versions are still query-able*
+
+- two stages of working with a version
+  - 1. create the version (unreleased)
+  - 2. release the version (released or archived)
+
+- creating a version from scrum product backlog
+  - must enter version name
+  - can optionally specify start date, release date, and description
+
+- creating a version from kanban backlog
+  - when you create a version, it will automatically be `unreleased`
+  - the "release" dropdown on a kanban board allows you to create and release a version that includes all done issues on the board
+
+- release actions
+  - unrelease
+  - archive
+  - edit
+  - delete
+
+- kanban board subfilters remove done issues if they are part of a released version
+  - `fixVersion in unreleasedVersions() OR fixVersion is EMPTY`
+
+- version-related JQL functions
+  - unreleased
+    - `unreleasedVersions(project)`
+    - `earliestUnreleasedVersion(project)`
+  - released
+    - `releasedVersions(project)`
+    - `latestReleasedVersion(project)`
