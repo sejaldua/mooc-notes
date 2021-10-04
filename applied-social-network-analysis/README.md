@@ -66,3 +66,40 @@ G.add_edge('A','B', relation='neighbor')
     - `G.nodes(data=True)`
   - get role of node A
     - `G.node['A']['role']`
+
+- bipartite graphs
+  - **bipartite graph**: a graph whose nodes can be split into two sets *L* and *R* and every edge connects a node in *L* with a node in *R*
+
+    ```python
+    from networkx.algorithms import bipartite
+    B = nx.Graph()
+    B.add_nodes_from(['A', 'B', 'C', 'D', 'E'], bipartite=0)
+    B.add_nodes_from([1, 2, 3, 4], bipartite=1)
+    B.add_edges_from([('A',1), ('B',1), ('C',1), ('C',3), ('D',2), ('E',3), ('E'.4)])
+    ```
+
+  - checking if a graph is bipartite:
+    - `bipartite.is_bipartite(B)`
+  - checking if a set of nodes is a bipartition of a graph
+    - `bipartite.is_bipartite_node_set(B,X)` where `X` is a set of nodes and `B` is the bipartite graph
+  - getting each set of nodes of a bipartite graph
+    - `bipartite.sets(B)`
+      - if not bipartite, `NetworkXError: Graph is not bipartite.`
+
+  - **L-Bipartite graph projection**: network of nodes in group *L* where a pair of nodes is connected if they have a common neighbor in *R* in the bipartite graph
+
+    ```python
+    # define graph B
+    # add edges to B
+    # define set of nodes X
+    P = bipartite.projected_graph(B, X)
+    ```
+
+  - **L-Bipartite weighted graph projection**: an L-Bipartite graph projection with weights on the edges that are proportional to the number of common neighbors between the nodes
+
+    ```python
+    # define graph B
+    # add edges to B
+    # define set of nodes X
+    P = bipartite.weighed_projected_graph(B, X)
+    ```
