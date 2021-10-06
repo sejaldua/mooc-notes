@@ -110,11 +110,34 @@ ORDER BY population DESC;
 > Write a query that generates output as shown above. The query should include:
 >
 > - The following columns, in order:
->
+>   - `country`, the name of the country
+>   - `urban_pop`, the sum of the population in major urban areas belonging to that country
+>   - `total_pop`, the total population of the country
+>   - `urban_pct`, the percentage of the population within urban areas, calculated by dividing `urban_pop` by `total_pop`
+> - Only countries that have an `urban_pct` greater than 0.5
+> Rows should be sorted by `urban_pct` in ascending order
+
+```SQL
+SELECT
+    f.name country,
+    c.urban_pop,
+    f.population total_pop,
+    (c.urban_pop / CAST(f.population AS FLOAT)) urban_pct
+FROM facts f
+INNER JOIN (
+            SELECT
+                facts_id,
+                SUM(population) urban_pop
+            FROM cities
+            GROUP BY c.facts_id
+           ) c ON c.facts_id = f.id
+WHERE urban_pct > .5
+ORDER BY urban_pct ASC;
+```
 
 Expected Output:
 
-| `**country**` | `**urban_pop**` | `**total_pop**` | `**urban_pct**` |
+| **`country`** | **`urban_pop`** | **`total_pop`** | **`urban_pct`** |
 | --- | --- | --- | --- |
 | Uruguay | 1672000 | 3341893 | 0.500315 |
 | Congo, Republic of the | 2445000 | 4755097 | 0.514185 |
