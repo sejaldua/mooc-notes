@@ -1,5 +1,7 @@
 # Applied Social Network Analysis in Python
 
+## Week 1
+
 - definitions
   - **network (or graph)** = a representation of conections among a set of items
     - items are called nodes (or vertices)
@@ -75,7 +77,7 @@ G.add_edge('A','B', relation='neighbor')
     B = nx.Graph()
     B.add_nodes_from(['A', 'B', 'C', 'D', 'E'], bipartite=0)
     B.add_nodes_from([1, 2, 3, 4], bipartite=1)
-    B.add_edges_from([('A',1), ('B',1), ('C',1), ('C',3), ('D',2), ('E',3), ('E'.4)])
+    B.add_edges_from([('A',1), ('B',1), ('C',1), ('C',3), ('D',2), ('E',3), ('E',4)])
     ```
 
   - checking if a graph is bipartite:
@@ -103,3 +105,36 @@ G.add_edge('A','B', relation='neighbor')
     # define set of nodes X
     P = bipartite.weighed_projected_graph(B, X)
     ```
+
+## Week 2
+
+- **Clustering Coefficient**
+  - **triadic closure** = the tendency for people who share connections in a social network to become connected
+  - **local clustering coefficient of a node** = fraction of pairs of the node's friends that are friends with each other
+    - compute the local clustering coefficient of node C
+      - \# of pairs of C's friends who are friends / \# of pairs of C's friends
+        - denominator: dc(dc-1)/2
+        - if demoninator is 0, assume local clustering coefficient is zero
+    - compute local clustering coefficient via `networkx`
+
+        ```python
+        nx.clustering(G, 'F')
+        ```
+
+  - compute global clustering coefficient
+    - *Approach 1*: average local clustering coefficient over all nodes in the graph
+
+        ```python
+        nx.average_clustering(G)
+        ```
+
+    - *Approach 2*: percentage of "open triads" that are triangles in a network
+      - **triangles** = 3 nodes connected by 3 edges
+      - **open triads** = 3 nodes that are connected by 2 edges
+      - NOTE: a triangle contains 3 open triads
+
+      - **transitivity** = ratio of number of triangles and number of "open triads" in a network
+    - both approaches measure the tendency for edges to form triangles
+      - transitivity weights nodes with large degree higher
+
+- **Distance Measures**
