@@ -160,5 +160,46 @@ G.add_edge('A','B', relation='neighbor')
   - **center** = the set of nodes that have eccentricity equal to the radius
 
 - Connected Components
+  - an undirected graph is **connected** if, for every pair of nodes, there is a path between them
+    - `nx.is_connected(G)`
+  - **connected component** = a subset of nodes such that:
+    - 1. every node in the subset has a path to every other node
+    - 2. no other node has a path to any node in the subset
+  - `networkx` functions
+    - `nx.number_connected_components(G)`
+    - `sorted(nx.connected_components(G))`
+    - `nx.node_connected_component(G, 'M')`
+  - connectivity in directed graphs
+    - a directed graph is **strongly connected** if, for every pair of nodes u and v, there is a directed path from u to v and a directed path from v to u
+      - `nx.is_strongly_connected(G)`
+    - a directed graph is **weakly connected** if replacing all directed edges with undirected edges produces a connected undirected graph
+      - `nx.is_weakly_connected(G)`
+  - **strongly connected component** = a subset of nodes such that:
+    - 1. every node in the subset has a *directed* path to every other node
+    - 2. no other node has a *directed* path to and from every node in the subset
+  - **weakly connected component** = the connected components of the graph after replacing all directed edges with undirected edges
+
+- Network Robustness
+  - **network robustness** = the ability of a network to maintain its general structural properties when it faces failures or attacks
+  - **types of attacks** = removal of nodes or edges
+  - **structural properties** = connectivity
+  - **examples**: airport closures, internet router failures, power line failures
+  - disconnecting a graph
+    - what is the smallest number of nodes that can be removed from this graph in order to disconnect it?
+      - `nx.node_connectivity(G_un)`
+    - which node?
+      - `nx.minimum_node_cut(G_un)`
+    - what is the smallest number of edges that can be removed from this graph in order to disconnect it?
+      - `nx.edge_connectivity(G_un)`
+    - which edges?
+      - `nx.minimum_edge_cut(G_un)`
+    - *robust networks have large minimum node and edge cuts*
+  - simple paths
+    - node G wants to send a message to node L
+      - `sorted(nx.all_simple_paths(G, 'G', 'L'))`
+    - if we wanted to block the message from G to L by removing nodes from the network, how many nodes would we need to remove?
+      - `nx.node_connectivity(G, 'G', 'L')`
+      - `nx.minimum_node_cut(G, 'G', 'L')`
+    - same idea for edges...
 
 -
