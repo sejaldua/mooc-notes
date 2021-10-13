@@ -108,7 +108,7 @@ G.add_edge('A','B', relation='neighbor')
 
 ## Week 2
 
-- **Clustering Coefficient**
+- Clustering Coefficient
   - **triadic closure** = the tendency for people who share connections in a social network to become connected
   - **local clustering coefficient of a node** = fraction of pairs of the node's friends that are friends with each other
     - compute the local clustering coefficient of node C
@@ -137,4 +137,28 @@ G.add_edge('A','B', relation='neighbor')
     - both approaches measure the tendency for edges to form triangles
       - transitivity weights nodes with large degree higher
 
-- **Distance Measures**
+- Distance Measures
+  - **path** = a sequence of nodes connected by an edge
+    - A - B - C - E - H (4 "hops")
+    - distance between two nodes = the length of the shortest path between them
+    - `nx.shortest_path(G, 'A', 'H')`
+    - `nx.shortest_path_length(G, 'A', 'H')`
+  - **breadth-first search** = a systematic and efficient procedure for computing distances from a node to all other nodes in a large network by "discovering" nodes in layers
+    - `T = nx.bfs_tree(G, 'A')`
+  - take average distance between every pair of nodes
+    - `nx.average_shortest_path_length(G)`
+  - **diameter** = maximum distance between any pair of nodes
+    - `nx.diameter(G)`
+  - **eccentricity** = the largest distance between node n and all other nodes
+    - `nx.eccenricity(G)`
+    - `out: {'A': 5, 'B': 4, 'C': 3}`
+  - **radius** = mimimum eccentricity
+    - `nx.radius(G)`
+  - **periphery** = the set of nodes that have eccentricity equal to the diameter
+    - `nx.periphery(G)`
+    - `out: ['A', 'K', 'J']`
+  - **center** = the set of nodes that have eccentricity equal to the radius
+
+- Connected Components
+
+-
