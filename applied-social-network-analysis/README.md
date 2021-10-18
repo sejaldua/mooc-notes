@@ -370,9 +370,16 @@ P = bipartite.weighed_projected_graph(B, X)
 
 ---
 
-- other centrality measures
-  - betweenness centrality
-  - load centrality
-  - page rank
-  - Katz centrality
-  - percolation centrality
+### other centrality measures
+
+- betweenness centrality
+- load centrality
+- page rank
+- Katz centrality
+- percolation centrality
+
+---
+
+### Betwenness Centrality
+
+---
