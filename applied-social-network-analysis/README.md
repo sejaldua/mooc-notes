@@ -370,7 +370,7 @@ P = bipartite.weighed_projected_graph(B, X)
 
 ---
 
-### other centrality measures
+### Other Centrality Measures
 
 - betweenness centrality
 - load centrality
@@ -380,6 +380,20 @@ P = bipartite.weighed_projected_graph(B, X)
 
 ---
 
-### Betwenness Centrality
+### Betweenness Centrality
+
+- assumption: important nodes connect other nodes
+- $C_{btw}(v) = \sum_{s,t \in N}\frac{\sigma_{s,t}(v)}{\sigma_{s,t}}$
+  - $\sigma_{s,t}$ = the number of shortest paths between nodes s and t
+  - $\sigma_{s,t}(v)$ = the number of shortest baths between nodes s and t *that pass through node v*
+- endpoints: we can either include or exclude node *v* as node *s* and *t* in the computation of $C_{btw}(v)$
 
 ---
+
+### Betweenness Centrality (continued)
+
+- endpoints: we can either include or exclude node *v* as node *s* and *t* in the computation of $C_{btw}(v)$
+  - if we exclude node *v*, we have
+    - $C_{btw}(B) = \frac{\sigma_{A,D}(B)}{\sigma_{A,D}} + \frac{\sigma_{A,C}(B)}{\sigma_{A,C}} + \frac{\sigma_{C,D}(B)}{\sigma_{C,D}} = \frac{1}{1} + \frac{1}{1} + \frac{0}{1} = 2$
+  - if we include node *v*, we have
+    - $C_{btw}(B) = \frac{\sigma_{A,B}(B)}{\sigma_{A,B}} + \frac{\sigma_{A,C}(B)}{\sigma_{A,C}} + \frac{\sigma_{A,D}(B)}{\sigma_{A,D}} + \frac{\sigma_{B,C}(B)}{\sigma_{B,C}} + \frac{\sigma_{B,D}(B)}{\sigma_{B,D}} + \frac{\sigma_{C,D}(B)}{\sigma_{C,D}}= \frac{1}{1} + \frac{1}{1} +  \frac{1}{1} + \frac{1}{1} + \frac{1}{1} + \frac{0}{1} = 5$
