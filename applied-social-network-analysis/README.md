@@ -397,3 +397,16 @@ P = bipartite.weighed_projected_graph(B, X)
     - $C_{btw}(B) = \frac{\sigma_{A,D}(B)}{\sigma_{A,D}} + \frac{\sigma_{A,C}(B)}{\sigma_{A,C}} + \frac{\sigma_{C,D}(B)}{\sigma_{C,D}} = \frac{1}{1} + \frac{1}{1} + \frac{0}{1} = 2$
   - if we include node *v*, we have
     - $C_{btw}(B) = \frac{\sigma_{A,B}(B)}{\sigma_{A,B}} + \frac{\sigma_{A,C}(B)}{\sigma_{A,C}} + \frac{\sigma_{A,D}(B)}{\sigma_{A,D}} + \frac{\sigma_{B,C}(B)}{\sigma_{B,C}} + \frac{\sigma_{B,D}(B)}{\sigma_{B,D}} + \frac{\sigma_{C,D}(B)}{\sigma_{C,D}}= \frac{1}{1} + \frac{1}{1} +  \frac{1}{1} + \frac{1}{1} + \frac{1}{1} + \frac{0}{1} = 5$
+
+---
+
+### Betweenness Centrality - Normalization
+
+- **Normalization**: betweenness centrality values will be larger in graphs with many nodes
+  - to control for this, we divide centrality values by the number of pairs of nodes in the graphs (excluding *v*)
+
+$\frac{1}{2}(|N|-1)(|N|-2)$ in undirected graphs
+
+$(|N|-1)(|N|-2)$ in directed graphs
+
+---
