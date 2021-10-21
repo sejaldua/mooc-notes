@@ -409,4 +409,41 @@ $\frac{1}{2}(|N|-1)(|N|-2)$ in undirected graphs
 
 $(|N|-1)(|N|-2)$ in directed graphs
 
+```python
+btwnCent = nx.betweenness_centrality(G, normalized=True, endpoints=False)
+```
+
 ---
+
+### Betweenness Centrality - misc
+
+- can use approximation to save on computational power
+- can compute for subsets
+- can use to find important edges instead of nodes
+
+---
+
+### Basic Page Rank
+
+> Developed by Google founders to measure the importance of webpages from the hyperlink network structure
+
+PageRank assigns a score of importance to each node. Important nodes are those with many in-links from important pages.
+
+Works best for directed networks.
+
+---
+
+### Page Rank (continued)
+
+- n = number of nodes in the network
+- k = number of steps
+
+1. Assign all nodes a PageRank of $\frac{1}{n}$
+2. Perform the `Basic PageRank Update Rule` k times
+
+`Basic PageRank Update Rule`:  
+Each node gives an equal share of its current PageRank to all the nodes it links to. The new PageRank of each node is the sum of all the PageRank it received from other nodes.
+
+---
+
+### Scaled Page Rank
