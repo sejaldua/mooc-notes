@@ -447,3 +447,41 @@ Each node gives an equal share of its current PageRank to all the nodes it links
 ---
 
 ### Scaled Page Rank
+
+The PageRank of a node at step k is the probability that a *random walker* lands on the node after taking k steps.
+
+Random walk of k steps:
+
+- start on a random node
+- choose an outgoing edge at random and follow it to the next node
+- repeat k times
+
+---
+
+### PageRank Problem
+
+For large enough k, F and G each have PageRank of 1/2 and all the other nodes have PageRank 0... in other words, whenever the random walk lands on F or G, it gets stuck on F and G.
+
+---
+
+### PageRank Solution
+
+**Solution**: introduce "damping parameter" $\alpha$
+
+- random walk of k steps with damping parameter $\alpha$
+  - start on a random node
+  - with probability $\alpha$: choose an outgoing edge at random and follow it to the next node
+  - with probability $1 - \alpha$: choose a node at random and go to it
+  - repeat k times
+
+---
+
+### Scaled Page Rank
+
+Scaled PageRank of k steps and damping factor $\alpha$ of a node n is the probability that a random walk with damping factor $\alpha$ lands on a node n after k steps
+
+For most networks, as k gets larger, Scaled PageRank converges to a unique value, which depends on $\alpha$
+
+---
+
+

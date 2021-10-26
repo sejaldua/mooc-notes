@@ -62,3 +62,33 @@ pd.Series(data=students)
   - `pd.Series(data='weather')`
 
 ---
+
+### Index and RangeIndex
+
+- automatic indexing (`RangeIndex`): 0 ... N - 1
+  - can edit `start`, `stop`, and `step`
+  - immutable object
+- manual indexing:
+  - `pd.Series(data=books_list, index=['label 1', 'label 2', 'label 3'])`
+
+---
+
+### The `.head()` and `.tail()` methods
+
+- default `n = 5`
+- `series.head(n=3)`
+- `series.tail(n=7)`
+
+---
+
+### Extracting by Index Position
+
+```python
+from string import ascii_lowercase
+alphabet = pd.Series(list(ascii_lowercase))
+alphabet[0]    # first letter
+alphabet[10]   # eleventh letter
+alphabet[:3]   # first three letters
+alphabet[6:11] # sixth through tenth letters
+alphabet[-6:]  # last six letters
+```
