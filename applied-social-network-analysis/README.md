@@ -484,4 +484,33 @@ For most networks, as k gets larger, Scaled PageRank converges to a unique value
 
 ---
 
+### Hubs and Authorities
 
+- another way to find central nodes in a network (important nodes)
+- given a query to a search engine:
+  - **root**: set of highly relevant web pages (e.g. pages that contain the query string)-- *potential authorities*
+
+    - find all pages that link to a page in the root-- *potential hubs*
+  - **base**: root nodes and any node that links to a node in root
+    - consider all edges connecting nodes in the base set
+
+---
+
+### HITS Algorithm
+
+Computing k iterations of the HITS algorithm to assign an *authority score* and *hub score* to each node
+
+1. Assign each node an authority and hub score of 1
+2. Apply the ***Authority Update Rule***: each node's *authority score* is the sum of *hub scores* (out-degree) of each node that points to it (... then normalize scores)
+
+---
+
+### Comparing Centrality Measures
+
+- in-degree centrality: how many nodes are pointing to you
+- closeness centrality: how many steps does it take to reach other nodes
+- betweenness centrality: shows up in the shortest path between many pairs of nodes
+- pagerank: central nodes would be traversed most if many random walks were taken
+- authority and hub: ...
+
+---
