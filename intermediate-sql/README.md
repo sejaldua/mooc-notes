@@ -411,3 +411,176 @@ INNER JOIN customer c
 GROUP BY i.customer_id
 ORDER BY customer_name
 ```
+
+## Building and Organizing Complex Queries
+
+> "Even if you don't intend anybody else to read your code, there's still a very good chance that somebody will have to stare at your code and figure out what it does: That person is probably going to be you, twelve months from now."
+>
+> --Raymond Chen
+
+### Formatting Tips
+
+- if a select statement has more than one column, put each on a new line, indented from the select statement
+- always capitalize SQL functoin names and keywords
+- put each clause of your query on a new line
+- Use indenting to make subqueries appear logically separate
+
+### The With Clause
+
+```SQL
+WITH [alias_name] AS ([subquery])
+
+SELECT [main_query]
+```
+
+Example: **no** `WITH` clause
+
+```SQL
+SELECT * FROM
+    (
+     SELECT
+         t.name,
+         ar.name artist,
+         al.title album_name,
+         mt.name media_type,
+         g.name genre,
+         t.milliseconds length_milliseconds
+     FROM track t
+     INNER JOIN media_type mt ON mt.media_type_id = t.media_type_id
+     INNER JOIN genre g ON g.genre_id = t.genre_id
+     INNER JOIN album al ON al.album_id = t.album_id
+     INNER JOIN artist ar ON ar.artist_id = al.artist_id
+    )
+WHERE album_name = "Jagged Little Pill";
+```
+
+Example: `WITH` clause
+
+```SQL
+WITH track_info AS
+    (                
+     SELECT
+         t.name,
+         ar.name artist,
+         al.title album_name,
+         mt.name media_type,
+         g.name genre,
+         t.milliseconds length_milliseconds
+     FROM track t
+     INNER JOIN media_type mt ON mt.media_type_id = t.media_type_id
+     INNER JOIN genre g ON g.genre_id = t.genre_id
+     INNER JOIN album al ON al.album_id = t.album_id
+     INNER JOIN artist ar ON ar.artist_id = al.artist_id
+    )
+
+SELECT * FROM track_info
+WHERE album_name = "Jagged Little Pill";
+```
+
+> Create a query that shows summary data for every playlist in the Chinook database
+>
+> - Use a `WITH` clause to create a named subquery with the following info:
+>   - The unique ID for the playlist
+>   - The name of the playlist
+>   - The name of each track from the playlist
+>   - The length of each track in seconds
+> - Your final table should have the following columns, in order:
+>   - `playlist_id` - the unique ID for the playlist
+>   - `playlist_name` - the name of the playlist
+>   - `number_of_tracks` - a count of the number of tracks in the playlist
+>   - `length_seconds` - the sum of the length of the playlist in seconds
+> - The results should be sorted by `playlist_id` in ascending order
+
+```SQL
+WITH track_info AS
+    (                
+     SELECT
+         t.name,
+         ar.name artist,
+         al.title album_name,
+         mt.name media_type,
+         g.name genre,
+         t.milliseconds length_milliseconds
+     FROM track t
+     INNER JOIN media_type mt ON mt.media_type_id = t.media_type_id
+     INNER JOIN genre g ON g.genre_id = t.genre_id
+     INNER JOIN album al ON al.album_id = t.album_id
+     INNER JOIN artist ar ON ar.artist_id = al.artist_id
+    )
+
+SELECT * FROM track_info
+WHERE album_name = "Jagged Little Pill";
+```
+
+### Creating Views
+
+View = permanently defining a subquery that we can use again and again
+
+syntax for creating a view:
+
+```SQL
+CREATE VIEW database.view_name AS
+    SELECT * FROM database.table;
+```
+
+```SQL
+CREATE VIEW chinook.customer_2 AS
+    SELECT * FROM chinook.customer;
+```
+
+to redefine a view, first we have to delete / drop it:
+
+```SQL
+DROP VIEW chinook.customer_2;
+```
+
+> Create a view called `customer_gt_90_dollars`
+>
+> - The view should contain the columns from `customer`, in their original order
+> - The view should contain only customers who have purchased more than $90 in tracks from the store
+> After the SQL query creates the view, write a second query to display our newly created view
+
+```SQL
+DROP VIEW IF EXISTS chinook.customer_gt_90_dollars;
+CREATE VIEW chinook.customer_gt_90_dollars AS 
+     SELECT c.*
+     FROM chinook.invoice i
+     INNER JOIN chinook.customer c ON i.customer_id = c.customer_id
+     GROUP BY 1
+     HAVING SUM(i.total) > 90;
+SELECT * FROM chinook.customer_gt_90_dollars;
+```
+
+### Combining Rows with Union
+
+> Use `UNION` to produce a table of customers in the USA *or* have spent more than $90, using the `customer_usa` and `customer_gt_90_dollars` views
+
+```SQL
+SELECT * FROM chinook.customer_usa
+UNION
+SELECT * FROM chinook.customer_gt_90_dollars;
+```
+
+### Combining Rows Using Intersect and Except
+
+| Operator | What it does | Python Equivalent |
+| --- | --- | --- |
+| `UNION` | Select rows that occur in *either* statement | `or` |
+| `INTERSECT` | Select rows that occur in *both* statements | `and` |
+| `EXCEPT` | Select rows that occur in the first statement, but don't occur in the second statement | `and not` |
+
+Customers who are in the USA **and** have spent more than $90
+
+```SQL
+SELECT * from customer_usa
+INTERSECT
+SELECT * from customer_gt_90_dollars;
+```
+
+Customers who are in the USA **and** have **not** spent more than $90
+
+```
+SELECT * from customer_usa
+EXCEPT
+SELECT * from customer_gt_90_dollars;
+```
