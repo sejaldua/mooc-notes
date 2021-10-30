@@ -357,3 +357,57 @@ SELECT c.first_name, c.last_name, c.phone
 FROM customer c
 WHERE first_name LIKE '%Belle%';
 ```
+
+### Generating Columns with the `CASE` Statement
+
+```SQL
+CASE
+    WHEN [comparison_1] THEN [value_1]
+    WHEN [comparison_2] THEN [value_2]
+    ELSE [value_3]
+    END
+    AS [new_column_name]
+```
+
+Example: let's look at how we can use `CASE` to add a new column to `protected`, which indicates whether each media type is protected
+
+```SQL
+SELECT
+    media_type_id,
+    name,
+    CASE
+        WHEN name LIKE '%Protected%' THEN 1
+        ELSE 0
+        END
+        AS protected
+FROM media_type;
+```
+
+> Write a query that summarizes the purchases of each customer. Assume we do not have any two customers with the same name. Your query should include the following columns, in order:
+>
+> - `customer_name` - containing the `first_name` and `last_name` columns separated by a space (e.g. Luke Skywalker)
+> - `number_of_purchases` - counting the number of purchases made by each customer
+> - `total_spent` - the total sum of money spent by each customer
+> - `customer_category` - a column that categorizes the customer based on their total purchases
+>   - `small spender` - if the customer's total purchases are less than $40
+>   - `big spender` - if the customer's total purchases are greater than $100
+>   - `regular` - if the customer's total purchases are between $40 and $100 (inclusive)
+> - Order your results by the `customer_name` column
+
+```SQL
+SELECT 
+    c.first_name || " " || c.last_name customer_name,
+    COUNT(i.invoice_id) number_of_purchases,
+    SUM(i.total) total_spent,
+    CASE
+        WHEN SUM(i.total) < 40 THEN 'small spender'
+        WHEN SUM(i.total) > 100 THEN 'big spender'
+        ELSE 'regular'
+        END
+        AS customer_category
+FROM invoice i
+INNER JOIN customer c
+    ON i.customer_id = c.customer_id
+GROUP BY i.customer_id
+ORDER BY customer_name
+```
