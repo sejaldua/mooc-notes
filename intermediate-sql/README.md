@@ -157,3 +157,55 @@ Expected Output:
 |Guam | 169000 | 161785 | 1.044596 |
 |Northern Mariana Islands | 56000 | 52344 | 1.069846 |
 |American Samoa | 64000 | 54343 | 1.177705 |
+
+## Intermediate Joins in SQL
+
+### Joining Three Tables
+
+```sql
+SELECT [column_names] FROM [table_name_one]
+[join_type] JOIN [table_name_two] ON [join_constraint]
+[join_type] JOIN [table_name_three] ON [join_constraint];
+```
+
+> Write a query that gathers data about the invoice with an `invoice_id` of 4. Include the following columns in order:
+>
+> - The id of the track, `track_id`
+> - The name of the track, `track_name`
+> - The name of media type of the track, `track_type`
+> - The price that the customer paid for the track, `unit_price`
+> - The quantity of the track that was purchased, `quantity`
+
+```SQL
+SELECT 
+  il.track_id, 
+  t.name track_name, 
+  mt.name track_type, 
+  t.unit_price, 
+  il.quantity 
+FROM invoice_line il
+INNER JOIN track t ON t.track_id = il.track_id
+INNER JOIN media_type mt ON mt.media_type_id = t.media_type_id
+WHERE invoice_id = 4;
+```
+
+> Add a column containing the artists name to the previous query.
+>
+> - The column should be called `artist_name`
+> - The column should be placed between `track_name` and `track_type`
+
+```SQL
+SELECT
+    il.track_id,
+    t.name track_name,
+    ar.name artist_name,
+    mt.name track_type,
+    il.unit_price,
+    il.quantity
+FROM invoice_line il
+INNER JOIN track t ON t.track_id = il.track_id
+INNER JOIN album al ON t.album_id = al.album_id
+INNER JOIN artist ar ON al.artist_id = ar.artist_id
+INNER JOIN media_type mt ON mt.media_type_id = t.media_type_id
+WHERE il.invoice_id = 4;
+```
