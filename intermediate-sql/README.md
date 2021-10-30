@@ -209,3 +209,151 @@ INNER JOIN artist ar ON al.artist_id = ar.artist_id
 INNER JOIN media_type mt ON mt.media_type_id = t.media_type_id
 WHERE il.invoice_id = 4;
 ```
+
+## Combining Multiple Joins with Subqueries
+
+Goal: write a query that lists the top 10 artists, calculated by the number of times a track by that artist has been purchased
+
+Process:
+
+1. Write a subquery that produces a table with `track.track_id` and `artist.name`
+2. Join that subquery to the `invoice_line` table
+3. Use a `GROUP BY` statement to calculate the number of times each artist has had a track purchased, and find the top 10
+
+1. Subquery
+
+```SQL
+SELECT
+    t.track_id,
+    ar.name artist_name
+FROM track t
+INNER JOIN album al ON al.album_id = t.album_id
+INNER JOIN artist ar ON ar.artist_id = al.artist_id
+ORDER BY 1 LIMIT 5;
+```
+
+2. Join subquery to `invoice_line` table
+
+```SQL
+SELECT
+    il.invoice_line_id,
+    il.track_id,
+    ta.artist_name
+FROM invoice_line il
+INNER JOIN (
+            SELECT
+                t.track_id,
+                ar.name artist_name
+            FROM track t
+            INNER JOIN album al ON al.album_id = t.album_id
+            INNER JOIN artist ar ON ar.artist_id = al.artist_id
+           ) ta
+           ON ta.track_id = il.track_id
+ORDER BY 1 LIMIT 5;
+```
+
+3. `GROUP BY` statement
+
+```SQL
+SELECT
+    ta.artist_name artist,
+    COUNT(*) tracks_purchased
+FROM invoice_line il
+INNER JOIN (
+            SELECT
+                t.track_id,
+                ar.name artist_name
+            FROM track t
+            INNER JOIN album al ON al.album_id = t.album_id
+            INNER JOIN artist ar ON ar.artist_id = al.artist_id
+           ) ta
+           ON ta.track_id = il.track_id
+GROUP BY 1
+ORDER BY 2 DESC LIMIT 10;
+```
+
+> Write a query that returns the top 5 albums, as calculated by the number of times a track from that album has been purchased. Your query should be sorted from most tracks purchased to least tracks purchased and return the following columns, in order:
+>
+> - `album`, the title of the album
+> - `artist`, the artist who produced the album
+> - `tracks_purchased`, the total number of tracks purchased from that album
+
+```SQL
+SELECT
+    ta.album_title album,
+    ta.artist_name artist,
+    COUNT(*) tracks_purchased
+FROM invoice_line il
+INNER JOIN (
+            SELECT
+                t.track_id,
+                al.title album_title,
+                ar.name artist_name
+            FROM track t
+            INNER JOIN album al ON al.album_id = t.album_id
+            INNER JOIN artist ar ON ar.artist_id = al.artist_id
+           ) ta
+           ON ta.track_id = il.track_id
+GROUP BY 1
+ORDER BY 3 DESC
+LIMIT 5;
+```
+
+### Recursive Joins
+
+Example:
+
+```SQL
+SELECT
+    e1.employee_id,
+    e2.employee_id supervisor_id
+FROM employee e1
+INNER JOIN employee e2 on e1.reports_to = e2.employee_id
+LIMIT 4;
+```
+
+> Write a query that returns information about each employee and their supervisor
+>
+> - The report should include employees even if they do not report to another employee
+> - The report should be sorted alphabetically by the `employee_name` column
+> - Your query should return the following columns, in order:
+>   - `employee_name` - containing the `first_name` and `last_name` columns separated by a space (e.g. Luke Skywalker)
+>   - `employee_title` - the title of that employee
+>   - `supervisor_name` - the first and last name of the person that employee reports to, in the same format as `employee_name`
+>   - `supervisor_title` - the title of the person the employee reports to
+
+```SQL
+SELECT
+    e1.first_name || " " || e1.last_name employee_name,
+    e1.title employee_title,
+    e2.first_name || " " || e2.last_name supervisor_name,
+    e2.title supervisor_title
+FROM employee e1
+LEFT JOIN employee e2 on e1.reports_to = e2.employee_id
+ORDER BY employee_name;
+```
+
+### Pattern Matching Using Like
+
+Example:
+
+```SQL
+SELECT
+    first_name,
+    last_name,
+    phone
+FROM customer
+WHERE first_name LIKE "%Jen%";
+```
+
+> Write a query that finds the contact details of a customer with a `first_name` containing `Belle` from the database. Your query should include the following columns, in order:
+>
+> - `first_name`
+> - `last_name`
+> - `phone`
+
+```SQL
+SELECT c.first_name, c.last_name, c.phone
+FROM customer c
+WHERE first_name LIKE '%Belle%';
+```
