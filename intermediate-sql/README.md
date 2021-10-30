@@ -645,3 +645,27 @@ FROM state_ca
 >   - `customer_name` - the `first_name` and `last_name` of the customer, separated by a space (e.g. Luke Skywalker)
 >   - `total_purchases` - the total amount spent on purchases by that customer
 > - The results should be sorted by the `customer_name` column in alphabetical order
+
+```SQL
+WITH
+    customers_india AS
+        (
+        SELECT * FROM customer
+        WHERE country = "India"
+        ),
+    sales_per_customer AS
+        (
+         SELECT
+             customer_id,
+             SUM(total) total
+         FROM invoice
+         GROUP BY 1
+        )
+
+SELECT
+    ci.first_name || " " || ci.last_name customer_name,
+    spc.total total_purchases
+FROM customers_india ci
+INNER JOIN sales_per_customer spc ON ci.customer_id = spc.customer_id
+ORDER BY 1;
+```
