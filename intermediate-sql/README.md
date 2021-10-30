@@ -584,3 +584,64 @@ SELECT * from customer_usa
 EXCEPT
 SELECT * from customer_gt_90_dollars;
 ```
+
+> Write a query that works out how many customers that are in the USA and have purchased more than $90 are assigned toe ach sales support agent. Assume no two employees have the same name. Your result should have the following columns, in order:
+>
+> - `employee_name` - the `first_name` and `last_name` of the employee separated by a space
+> - `customers_usa_gt_90` - the number of customers assigned to that employee that are both from the USA and have purchased more than $90 worth of tracks
+> - The result should include all employees with the title "Sales Support Agent", but not employees with any other title
+> - Order your results by the `employee_name` column
+
+```SQL
+WITH customers_usa_gt_90 AS 
+(
+    SELECT * FROM chinook.customer_usa
+    INTERSECT
+    SELECT * FROM chinook.customer_gt_90_dollars
+)
+SELECT 
+    e.first_name || " " || e.last_name employee_name,
+    COUNT(c.customer_id) customers_usa_gt_90
+FROM employee e
+LEFT JOIN customers_usa_gt_90 c ON c.support_rep_id = e.employee_id
+WHERE e.title = "Sales Support Agent"
+GROUP BY 1
+ORDER BY 1;
+```
+
+### Multiple Named Subqueries
+
+```SQL
+WITH
+    usa AS
+        (
+        SELECT * FROM customer
+        WHERE country = "USA"
+        ),
+    last_name_g AS
+        (
+         SELECT * FROM usa
+         WHERE last_name LIKE "G%"
+        ),
+    state_ca AS
+        (
+        SELECT * FROM last_name_g
+        WHERE state = "CA"
+        )
+
+SELECT
+    first_name,
+    last_name,
+    country,
+    state
+FROM state_ca
+```
+
+> Write a query that uses multiple named subqueries in a `WITH` clause to gather total sales data on customers from India
+>
+> - The first named subquery should return all customers that are from India
+> - The second named subquery should calculate the sum total for every customer
+> - The main query should join the two named subqueries, resulting in the following final columns:
+>   - `customer_name` - the `first_name` and `last_name` of the customer, separated by a space (e.g. Luke Skywalker)
+>   - `total_purchases` - the total amount spent on purchases by that customer
+> - The results should be sorted by the `customer_name` column in alphabetical order
