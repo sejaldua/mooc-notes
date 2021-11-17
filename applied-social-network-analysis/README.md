@@ -514,3 +514,185 @@ Computing k iterations of the HITS algorithm to assign an *authority score* and 
 - authority and hub: ...
 
 ---
+
+## Week 4
+
+---
+
+### Degree Distributions
+
+- the **degree** of a node in an undirected graph is the number of neighbors it has
+- the **degree distribution** of a graph is the probability distribution of the degrees over the entire network
+- plot degree distribution of network
+
+  ```python
+  degrees = G.degree()
+  degree_values = sorted(set(degrees.values()))
+  histogram = [list(degrees.values()).count(i) / float(nx.number_of_nodes(G)) for i in degree_values]
+
+  import matplotlib.pyplot as plt
+  plt.bar(degree_values, histogram)
+  plt.xlabel('Degree')
+  plt.ylabel('Fraction of Nodes')
+  plt.show()
+  ```  
+
+---
+
+### Degree Distributions (continued)
+
+- A: **Actors**: network of 225,000 actors connected when they appear in a movie together
+- B: **The Web**: network of 325,000 documents on the WWW connected by URLs
+- C: **US Power Grid**: network of 4,941 generators connected by transmission lines
+- Degree-distribution looks like a straight line on log-log scale
+  - **Power law**: $P(k) = Ck^{-\alpha}$, where $\alpha$ and C are constants
+    - $\alpha$-values -- A: 2.3, B: 2.1, C: 4
+
+---
+
+### Preferential Attachment Model
+
+- start with two nodes connected by an edge
+- at each time step, add a new node with an edge connecting it to an existing node
+- choose the node to connect to at random with probability proportional to each node's degree
+  - the probability of connecting to a node $u$ of degree $k_u$ is $\frac{k_u}{\sum_jk_j}$
+
+---
+
+### Preferential Attachment in NetworkX
+
+`barabasi_albert_graph(n,m)` returns a network with n nodes. Each new node attaches to m existing nodes according to the Preferential Attachment model
+
+```python
+G = nx.barabasi_albert_graph(1000000,1)
+degrees = G.degree()
+degree_values = sorted(set(degrees.values()))
+histogram = [list(degrees.values().count(i)) / float(nx.number_of_nodes(G)) for i in degree_values]
+
+plt.plot(degree_values, histogram, 'o')
+plt.xlabel('Degree')
+plt.ylabel('Fraction of Nodes')
+plt.xscale('log')
+plt.yscale('log')
+plt.show()
+```
+
+---
+
+### Small World Networks
+
+- **local clustering coefficient of a node**: fraction of pairs of the node's friends that are friends with each other
+  - Facebook 2011: high average CC (decreases with degree)
+- The degree distribution of small world network is not a power law because the degree of most nodes lie in the middle.
+- the small world model starts with a ring lattice with nodes connected to k nearest neighbors (high local clustering), and it rewires edges with probability p
+
+---
+
+### Small World Networks (continued)
+
+- can be disconnected, which is sometimes undesirable
+- `connected_watts_strogatz_graph(n,k,p,t)` runs `watts_strogatz_graph(n,k,p)` up to t times, until it returns a connected network
+
+---
+
+### Link Prediction
+
+- Which new edges are likely to form in this network?
+- Who is likely to become friends?
+- **Triadic closure**: the tendency for people who share connections in a social network to become connected
+
+---
+
+#### Measure 1: Common Neighbors
+
+The number of common neighbors of nodes X and Y is :
+
+```python
+common_neigh = [(e[0], e[1], len(list(nx.common_neighbors(G, e[0], e[1]))) for e in nx.non_edges(G)]
+sorted(common_neigh, key=operator.itemgetter(2), reverse=True)
+print(common_neigh)
+```
+
+---
+
+#### Measure 2: Jaccard Coefficient
+
+Number of common neighbors normalized by the total number of neighbors
+
+```python
+L = list(nx.jaccard_coefficient(G))
+L.sort(key=operator.itemgetter(2), reverse=True)
+print(L)
+```
+
+---
+
+#### Measure 3: Resource ALlocation
+
+Fraction of a "resource" that a node can send to another through their common neighbors
+
+```python
+L = list(nx.resource_allocation_index(G))
+L.sort(key=operator.itemgetter(2), reverse=True)
+print(L)
+```
+
+---
+
+#### Measure 4: Adamic-Adar Index
+
+Similar to resource allocation index, but with log in the denominator
+
+```python
+L = list(nx.adamic_adar(G))
+L.sort(key=operator.itemgetter(2), reverse=True)
+print(L)
+```
+
+---
+
+#### Measure 5: Preferential Attachment
+
+In the preferential attachment model, nodes with high degree get more neighbors; product of the nodes' degree
+
+```python
+L = list(nx.preferential_attachment(G))
+L.sort(key=operator.itemgetter(2), reverse=True)
+print(L)
+```
+
+---
+
+### Community Structure
+
+- some measures consider the community structure of the network for link prediction
+- assume the nodes in this network belong to different communities (sets of nodes)
+- pairs of nodes who belong to the same community and have many common neighbors in their community are likely to form an edge
+
+---
+
+#### Measure 6: Community Common Neighbors
+
+Number of common neighbors with bonus for neighbors in same community
+
+First step: assign nodes to communities with attribute node "community"
+
+```python
+L = list(nx.cn_soundarajan_hopcroft(G))
+L.sort(key=operator.itemgetter(2), reverse=True)
+print(L)
+```
+
+---
+
+#### Measure 7: Community Resource Allocation
+
+Similar to resource allocation index, but only considering nodes in the same community
+
+First step: assign nodes to communities with attribute node "community"
+
+```python
+L = list(nx.ra_soundarajan_hopcroft(G))
+L.sort(key=operator.itemgetter(2), reverse=True)
+print(L)
+```
