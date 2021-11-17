@@ -8,5 +8,5 @@ One place for notes and notebooks from Udemy and Coursera courses.
 | Agile with Atlassian Jira | Coursera | [README](agile-coursera/README.md) | September 2021 |
 | Scala and Spark for Big Data and Machine Learning | IBM x Udemy | [README](scala-and-spark/README.md) | |
 | Stanford Machine Learning (Andrew Ng) | Coursera x Stanford | [README](machine-learning-stanford/README.md) |
-| Applied Social Network Analysis | Coursera x University of Michigan | [README](applied-social-network-analysis/README.md) | |
-| Intermediate SQL | Dataquest | [README](intermediate-sql/README.md) | |
+| Intermediate SQL | Dataquest | [README](intermediate-sql/README.md) | October 2021 |
+| Applied Social Network Analysis | Coursera x University of Michigan | [README](applied-social-network-analysis/README.md) | November 2021 |
