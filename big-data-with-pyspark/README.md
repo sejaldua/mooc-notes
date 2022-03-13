@@ -63,7 +63,7 @@ my_spark = SparkSession.builder.getOrCreate()
 print(my_spark)
 ```
 
-### Viewing Tables
+## Viewing Tables
 
 ```python
 # Print the tables in the catalog
@@ -123,7 +123,7 @@ print(spark.catalog.listTables())
 
 ---
 
-### Load Data into Spark
+## Load Data into Spark
 
 ```python
 file_path = "/usr/local/share/datasets/airports.csv"
@@ -137,7 +137,7 @@ airports.show()
 
 ---
 
-### Creating Columns
+## Creating Columns
 
 ```python
 # Create the DataFrame flights
@@ -151,7 +151,7 @@ flights = flights.withColumn("duration_hrs", flights.air_time / 60)
 ```
 ---
 
-### SQL in a nutshell
+## SQL in a nutshell
 
 ```sql
 SELECT * FROM my_table
@@ -168,7 +168,7 @@ WHERE grade = 'A';
 
 ---
 
-### SQL in a nutshell (*continued*)
+## SQL in a nutshell (*continued*)
 
 ```sql
 SELECT COUNT(*) FROM flights
@@ -182,7 +182,7 @@ GROUP BY origin, dest;
 
 ---
 
-### Filtering Data
+## Filtering Data
 
 Filter by passing a string:
 ```python
@@ -196,7 +196,7 @@ long_flights2 = flights.filter(flights.distance > 1000)
 
 ---
 
-### Selecting Data
+## Selecting Data
 
 Selecting using column string syntax:
 ```python
@@ -215,7 +215,7 @@ selected2 = temp.filter(filterA).filter(filterB)
 
 ---
 
-### Selecting Data (*advanced*)
+## Selecting Data (*advanced*)
 
 Using the `.select()` method to perform column-wise operations:
 ```python
@@ -234,7 +234,7 @@ flights.selectExpr("air_time/60 as duration_hrs")
 
 ---
 
-### Aggregating
+## Aggregating
 
 Common aggregation methods: `.min()`, `.max()`, `.count()`
 
@@ -248,7 +248,7 @@ df.groupBy().min("col").show()
 
 ---
 
-### Aggregation Examples
+## Aggregation Examples
 
 ```python
 # Find the shortest flight from PDX in terms of distance
@@ -268,7 +268,7 @@ flights.withColumn("duration_hrs", flights.air_time/60).groupBy().sum("duration_
 
 ---
 
-### Grouping and Aggregating
+## Grouping and Aggregating
 
 ```python
 # Group by tailnum
@@ -286,7 +286,7 @@ by_origin.avg("air_time").show()
 
 ---
 
-### Grouping and Aggregating (*continued*)
+## Grouping and Aggregating (*continued*)
 
 In addition to `GroupedData` methods that we've already seen, there is also the `.agg()` method can be used with any of the functions from the `pyspark.sql.functions` submodule
 
@@ -303,7 +303,7 @@ by_month_dest.agg(F.stddev("dep_delay")).show()
 
 ---
 
-### Joining
+## Joining
 
 A join will combine two different tables along a column that they share. The column is called the *key*. 
 
@@ -315,7 +315,7 @@ In PySpark, joins are performed using the DataFrame method `.join()`, which take
 
 ---
 
-### Join (example)
+## Join (example)
 
 ```python
 # Examine the data
@@ -333,7 +333,7 @@ print(flights_with_airports.show())
 
 ---
 
-### Machine Learning Pipelines
+## Machine Learning Pipelines
 
 `pyspark.ml` module contains `Transformer` and `Estimator` classes
   - `Transformer` classes have a `.transform()` method that takes a DataFrame and returns a new DataFrame
@@ -343,7 +343,7 @@ print(flights_with_airports.show())
 
 ---
 
-### Data types
+## Data types
 
 - Spark models *only* handle numeric data (all columns must be either integers or decimals (a.k.a 'doubles'))
 - Spark sometimes represents numeric columns as strings containing numbers
@@ -353,7 +353,7 @@ print(flights_with_airports.show())
   
 ---
 
-### Cast (example)
+## Cast (example)
 
 ```python
 # Cast the columns to integers
@@ -365,7 +365,7 @@ model_data = model_data.withColumn("plane_year", model_data.plane_year.cast("int
 
 ---
 
-### Making a Boolean
+## Making a Boolean
 
 ```python
 # Create is_late
@@ -385,14 +385,14 @@ model_data = model_data.filter(
 
 ---
 
-### Strings and factors
+## Strings and factors
 
 - Use `pyspark.ml.features` submodule to create "one-hot vectors" to represent string variables as numeric data
   - **one hot vector** = a way of representing a categorical feature where every observation has a vector in which all elements are 0 except for at most one element, which as a value of 1
 
 ---
 
-### How to create a one-hot vector
+## How to create a one-hot vector
 
   - Step 1: create a `StringIndexer`, which takes a dataframe with a column of strings and maps each unique string to a number, then the `Estimator` returns a `Transformer` that takes a DataFrame, attaches the mapping as its metadata, and returns a new dataframe with a numeric column corresponding to the string column
   - Step 2: encode numeric column as a hone-hot vector using a `OneHotEncoder`
@@ -400,7 +400,7 @@ model_data = model_data.filter(
 
 ---
 
-### One Hot Encoding (example)
+## One Hot Encoding (example)
 
 ```python
 # Create a StringIndexer
@@ -412,7 +412,7 @@ carr_encoder = OneHotEncoder(inputCol="carrier_index", outputCol="carrier_fact")
 
 ---
 
-### Vector Assembler
+## Vector Assembler
 
 - Last step is to combine all of the columns containing our features into a single column
 - Every observation is a vector that contains all the information about it, and a label tells the modeler what value that observation corresponds to
@@ -424,7 +424,7 @@ vec_assembler = VectorAssembler(inputCols=["month", "air_time", "carrier_fact", 
 
 ---
 
-### Pipeline
+## Pipeline
 
 - `Pipeline` is a class in the `pyspark.ml` module that combines all the `Estimators` and `Transformers` that have already been created
 
@@ -438,7 +438,7 @@ flights_pipe = Pipeline(stages=[dest_indexer, dest_encoder, carr_indexer, carr_e
 
 ---
 
-### Final Steps
+## Final Steps
 
 - fitting and transforming the data
 
@@ -453,3 +453,119 @@ training, test = piped_data.randomSplit([0.6, 0.4])
 ```
 
 ---
+
+## Hyperparameters
+
+- **hyperparameter** = a value in the model that's not estimated from the data, but rather is supplied by the user to maximize performance
+
+---
+
+## Creating Logistic Regression Modeler
+
+```python
+# Import LogisticRegression
+from pyspark.ml.classification import LogisticRegression
+
+# Create a LogisticRegression Estimator
+lr = LogisticRegression()
+```
+
+---
+
+## Cross validation
+
+- k-fold cross validation works by splitting the training data into a few different partitions
+- once the data is plit up, one of the partitions is set aside, and the model is fit to the others... error is measured against the held out partition
+- this is repeated for each of the partitions, so that every block of data is held out and used as a test set exactly once
+- cross validation error = average error of each of held out partitions (good estimate of actual error on held out data)
+
+---
+
+## Create the evaluator
+
+```python
+# Import the evaluation submodule
+import pyspark.ml.evaluation as evals
+
+# Create a BinaryClassificationEvaluator
+evaluator = evals.BinaryClassificationEvaluator(metricName="areaUnderROC")
+```
+
+---
+
+## Grid Search Hyperparameter Tuning
+
+```python
+# Import the tuning submodule
+import pyspark.ml.tuning as tune
+
+# Create the parameter grid
+grid = tune.ParamGridBuilder()
+
+# Add the hyperparameter
+grid = grid.addGrid(lr.regParam, np.arange(0, .1, .01))
+grid = grid.addGrid(lr.elasticNetParam, [0,1])
+
+# Build the grid
+grid = grid.build()
+```
+
+---
+## Create the CrossValidator
+
+```python
+# Create the CrossValidator
+cv = tune.CrossValidator(estimator=lr,
+               estimatorParamMaps=grid,
+               evaluator=evaluator
+               )
+```
+
+---
+
+## Fit the model(s)
+
+Cross validation is very computationally intensive... to do this locally:
+
+```python
+# Fit cross validation models
+models = cv.fit(training)
+
+# Extract the best model
+best_lr = models.bestModel
+```
+
+---
+
+## Evaluating binary classifiers
+
+*The Closer the AUC is to 1, the better the model is*
+
+- AUC = area under the curve
+- ROC = receiver operating curve / characteristic
+
+---
+
+## Evaluate the model
+
+```python
+# Use the model to predict the test set
+test_results = best_lr.transform(test)
+
+# Evaluate the predictions
+print(evaluator.evaluate(test_results))
+```
+
+---
+
+# Data Engineering for Everyone
+
+---
+
+## Structured vs Unstructured Data
+
+| Structured | Semi-Structured | Unstructured |
+| --- | --- | --- |
+| Is easy to search and organize | Is moderately easy to search and organize | Is difficult to search and organize|
+| Corresponds to data in a tabular format | Follows a model while allowing more flexibility than structured data | Stores images, pictures, videos, and text |
+| Is created and queried using SQL | Is stored in XML or JSON format, or in NoSQL databases | Is usually stored in data lakes |
