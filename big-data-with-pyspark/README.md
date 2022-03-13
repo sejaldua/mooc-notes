@@ -409,3 +409,47 @@ carr_indexer = StringIndexer(inputCol="carrier", outputCol="carrier_index")
 # Create a OneHotEncoder
 carr_encoder = OneHotEncoder(inputCol="carrier_index", outputCol="carrier_fact")
 ```
+
+---
+
+### Vector Assembler
+
+- Last step is to combine all of the columns containing our features into a single column
+- Every observation is a vector that contains all the information about it, and a label tells the modeler what value that observation corresponds to
+
+```python
+# Make a VectorAssembler
+vec_assembler = VectorAssembler(inputCols=["month", "air_time", "carrier_fact", "dest_fact", "plane_age"], outputCol="features")
+```
+
+---
+
+### Pipeline
+
+- `Pipeline` is a class in the `pyspark.ml` module that combines all the `Estimators` and `Transformers` that have already been created
+
+```python
+# Import Pipeline
+from pyspark.ml import Pipeline
+
+# Make the pipeline
+flights_pipe = Pipeline(stages=[dest_indexer, dest_encoder, carr_indexer, carr_encoder, vec_assembler])
+```
+
+---
+
+### Final Steps
+
+- fitting and transforming the data
+
+```python
+piped_data = flights_pipe.fit(model_data).transform(model_data)
+```
+
+- splitting the data into training and test sets
+
+```python
+training, test = piped_data.randomSplit([0.6, 0.4])
+```
+
+---
