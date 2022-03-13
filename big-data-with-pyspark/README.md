@@ -265,3 +265,120 @@ flights.filter(flights.carrier == "DL").filter(flights.origin == "SEA").groupBy(
 # Total hours in the air
 flights.withColumn("duration_hrs", flights.air_time/60).groupBy().sum("duration_hrs").show()
 ```
+
+---
+
+### Grouping and Aggregating
+
+```python
+# Group by tailnum
+by_plane = flights.groupBy("tailnum")
+
+# Number of flights each plane made
+by_plane.count().show()
+
+# Group by origin
+by_origin = flights.groupBy("origin")
+
+# Average duration of flights from PDX and SEA
+by_origin.avg("air_time").show()
+```
+
+---
+
+### Grouping and Aggregating (*continued*)
+
+In addition to `GroupedData` methods that we've already seen, there is also the `.agg()` method can be used with any of the functions from the `pyspark.sql.functions` submodule
+
+```python
+# Import pyspark.sql.functions as F
+import pyspark.sql.functions as F
+
+# Group by month and dest
+by_month_dest = flights.groupBy("month", "dest")
+
+# Standard deviation of departure delay
+by_month_dest.agg(F.stddev("dep_delay")).show()
+```
+
+---
+
+### Joining
+
+A join will combine two different tables along a column that they share. The column is called the *key*. 
+
+In PySpark, joins are performed using the DataFrame method `.join()`, which takes 3 arguments: 
+  - the dataframe to join
+  - `on` (the name of the key column(s) as a string)
+  - `how` (the kind of join to perform)
+    - default is `how="leftouter"`
+
+---
+
+### Join (example)
+
+```python
+# Examine the data
+print(airports.show())
+
+# Rename the faa column
+airports = airports.withColumnRenamed("faa", "dest")
+
+# Join the DataFrames
+flights_with_airports = flights.join(airports, on='dest', how='leftouter')
+
+# Examine the new DataFrame
+print(flights_with_airports.show())
+```
+
+---
+
+### Machine Learning Pipelines
+
+`pyspark.ml` module contains `Transformer` and `Estimator` classes
+  - `Transformer` classes have a `.transform()` method that takes a DataFrame and returns a new DataFrame
+      examples: `Bucketizer` to create discrete bins from a continuous feature and `PCA` to reduce the dimensionalitity of dataset using principal component analysis
+  - `Estimator` classes all implement a `.fit()` method that takes a DataFrame and returns a model object
+    - `StringIndexerModel` for including categorical data saved as strings and `RandomForestModel` 
+
+---
+
+### Data types
+
+- Spark models *only* handle numeric data (all columns must be either integers or decimals (a.k.a 'doubles'))
+- Spark sometimes represents numeric columns as strings containing numbers
+- To remedy this, use `.cast()` in combination with `.withColumn()`
+  - `.cast()` works on columns while `.withColumn()` works on dataframes
+    - takes an argument indicating what kind of value you want to create (e.g. `"integer"` or `"double"`)
+  
+---
+
+### Cast (example)
+
+```python
+# Cast the columns to integers
+model_data = model_data.withColumn("arr_delay", model_data.arr_delay.cast("integer"))
+model_data = model_data.withColumn("air_time", model_data.air_time.cast("integer"))
+model_data = model_data.withColumn("month", model_data.month.cast("integer"))
+model_data = model_data.withColumn("plane_year", model_data.plane_year.cast("integer"))
+```
+
+---
+
+### Making a Boolean
+
+```python
+# Create is_late
+model_data = model_data.withColumn("is_late", model_data.arr_delay > 0)
+
+# Convert to an integer
+model_data = model_data.withColumn("label", model_data.is_late.cast("integer"))
+
+# Remove missing values
+model_data = model_data.filter(
+    "arr_delay is not NULL \
+    and dep_delay is not NULL \
+    and air_time is not NULL \
+    and plane_year is not NULL"
+  )
+```
