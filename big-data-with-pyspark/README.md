@@ -382,3 +382,30 @@ model_data = model_data.filter(
     and plane_year is not NULL"
   )
 ```
+
+---
+
+### Strings and factors
+
+- Use `pyspark.ml.features` submodule to create "one-hot vectors" to represent string variables as numeric data
+  - **one hot vector** = a way of representing a categorical feature where every observation has a vector in which all elements are 0 except for at most one element, which as a value of 1
+
+---
+
+### How to create a one-hot vector
+
+  - Step 1: create a `StringIndexer`, which takes a dataframe with a column of strings and maps each unique string to a number, then the `Estimator` returns a `Transformer` that takes a DataFrame, attaches the mapping as its metadata, and returns a new dataframe with a numeric column corresponding to the string column
+  - Step 2: encode numeric column as a hone-hot vector using a `OneHotEncoder`
+    - also creates an `Estimator`, then a `Transformer`
+
+---
+
+### One Hot Encoding (example)
+
+```python
+# Create a StringIndexer
+carr_indexer = StringIndexer(inputCol="carrier", outputCol="carrier_index")
+
+# Create a OneHotEncoder
+carr_encoder = OneHotEncoder(inputCol="carrier_index", outputCol="carrier_fact")
+```
