@@ -74,7 +74,7 @@ print(spark.catalog.listTables())
 ## Query Table
 
 ```python
-query = "FROM flights SELECT * LIMIT 10"
+query = "SELECT * FROM flights LIMIT 10"
 
 # Get the first 10 rows of flights
 flights10 = spark.sql(query)
@@ -569,3 +569,75 @@ print(evaluator.evaluate(test_results))
 | Is easy to search and organize | Is moderately easy to search and organize | Is difficult to search and organize|
 | Corresponds to data in a tabular format | Follows a model while allowing more flexibility than structured data | Stores images, pictures, videos, and text |
 | Is created and queried using SQL | Is stored in XML or JSON format, or in NoSQL databases | Is usually stored in data lakes |
+
+---
+
+## SQL Databases
+
+- SQL = structured query language
+- industry standard for Relational Database Management System (RDBMS)
+- allows you to access many records at once, and group, filter, or aggregate them
+- close to written English-- easy to write and understand
+- data engineers use SQL to create and maintain databases
+- data scientists use SQL to query databases
+
+---
+
+## SQL for Data Engineers
+
+```sql
+CREATE TABLE employees (
+  employee_id INT,
+  first_name VARCHAR(255),
+  role VARCHAR(255),
+  team VARCHAR(255),
+  full_time BOOLEAN,
+  office VARCHAR(255)
+)
+```
+
+---
+
+## Database Schema
+
+- databases are made of tables
+- database schema governs how tables are related
+
+---
+
+## Data Warehouses and Data Lakes
+
+| Data Lake | Data Warehouse |
+| --- | --- |
+| Stores all the raw data | Specific data for specific use |
+| Can be petabytes (1 million GBs) | Relatively small |
+| Stores all data structures | Stores mainly structured data |
+| Cost-effective | More costly to update |
+| Difficult to analyze | Optimized for data analysis |
+| Requires an up-to-date data catalog | |
+| Used by data scientists | Also used by data analysts and business analysts |
+| Big data, real-time analytics | Ad-hoc, read-only queries |
+
+---
+
+## Data Catalog for Data
+
+- what is the source of this data?
+- where is this data used?
+- who is the owner of the data?
+- how often is the data updated?
+- good practice in terms of data governance
+- ensures reproducibility
+- good practice for any data storage solution
+  - good for reliability, autonomy, scabilibility, speed
+
+---
+
+## Database vs Data Warehouse
+
+- database
+  - general term
+  - definition: *organized data stored and accessed on a computer*
+- data warehouse
+  - type of database
+
