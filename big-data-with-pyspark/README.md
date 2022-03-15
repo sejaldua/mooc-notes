@@ -641,3 +641,43 @@ CREATE TABLE employees (
 - data warehouse
   - type of database
 
+---
+
+## Processing Data
+
+- **data processing** = converting raw data into meaningful information
+- remove unwanted data
+- optimize memory, process and network costs
+- convert data from one type to another
+- organize data
+- fit into a schema / structure
+- increase productivity
+
+---
+
+## How data engineers process data
+
+- data manipulation, cleaning, and tidying tasks
+  - can be automated
+  - always need to be done
+- store data in a sanely structured database
+- create views on top of the database tables
+- optimizing the performance of the database
+  
+---
+
+## Scheduling data
+
+- can apply to any task listed in data processing
+- scheduling is the glue of your system
+- holds each piece and organize how they work together
+- runs tasks in a specific order and resolves all dependencies
+
+---
+
+## Manual, time, and sensor scheduling
+
+- manually
+- automatically run at a specific time
+- automatically run if a specific condition is met (sensor scheduling)
+  - requires having sensors always listening to see if something has been added
