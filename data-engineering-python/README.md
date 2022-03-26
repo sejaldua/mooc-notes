@@ -380,3 +380,217 @@ with Pool(4) as p:
 
 result_df = pd.concat(results)
 ```
+
+---
+
+## From tasks to subtasks
+
+The `multiprocessor.Pool` API allows you to distribute your workload over several processes. `parallel_apply()` takes as input the function being applied, the grouping used, and the number of cores needed for the analysis.
+
+```python
+# Function to apply a function over multiple cores
+@print_timing
+def parallel_apply(apply_func, groups, nb_cores):
+    with Pool(nb_cores) as p:
+        results = p.map(apply_func, groups)
+    return pd.concat(results)
+
+# Parallel apply using 4 cores
+parallel_apply(take_mean_age, athlete_events.groupby('Year'), 4)
+```
+
+---
+
+## Parallel computing using a dataframe
+
+A more convenient way to parallelize an apply over several groups is using the `dask` framework and its abstraction of the `pandas` DataFrame
+
+```python
+import dask.dataframe as dd
+
+# Set the number of partitions
+athlete_events_dask = dd.from_pandas(athlete_events, npartitions=4)
+
+# Calculate the mean Age per Year
+print(athlete_events_dask.groupby('Year').Age.mean().compute())
+```
+
+---
+
+## Parallel computation frameworks
+
+- **Apache Hadoop**
+  - HDFS = distributed file system where files reside on multiple different computers
+
+---
+
+## Parallel computation frameworks (continued)
+
+- **Apache Hadoop**
+  - Map Reduce = split tasks into subtasks between several processing units
+    - Hive = layered on top of Hadoop ecosystem using SQL to make it easier to write map-reduce jobs *(originally developed by Facebook)*
+    - Spark = didstributes data processing tasks between clusters of computers while avoiding disk writes and keeping as much processing as possible in memory *(originally developed by UC Berkeley)*
+
+---
+
+## Resilient distributed datasets (RDDs)
+
+- Spark relies on them
+- don't have named columns
+- list of tuples
+- 2 types of operations:
+  - transformations: `.map()` or `.filter()`
+  - actions: `.count()` or `.first()`
+
+---
+
+## PySpark GroupBy
+
+```python
+# Print the schema of athlete_events_spark
+print(athlete_events_spark.printSchema())
+
+# Group by the Year, and find the mean Age
+print(athlete_events_spark.groupBy('Year').mean('Age').show())
+```
+
+---
+
+## Workflow scheduling frameworks
+
+- `cron` = scheduling tool
+- DAGs = Directed Acycling Graph
+  - set of nodes
+  - connected by directed edges
+  - no cycles
+- tools: Linux cron, Spotify Luigi, Apache Airflow
+
+---
+
+## Airflow DAGs
+
+```python
+# Create the DAG object
+dag = DAG(dag_id="car_factory_simulation",
+          default_args={"owner": "airflow","start_date": airflow.utils.dates.days_ago(2)},
+          schedule_interval="0 * * * *")
+
+# Task definitions
+assemble_frame = BashOperator(task_id="assemble_frame", bash_command='echo "Assembling frame"', dag=dag)
+place_tires = BashOperator(task_id="place_tires", bash_command='echo "Placing tires"', dag=dag)
+assemble_body = BashOperator(task_id="assemble_body", bash_command='echo "Assembling body"', dag=dag)
+apply_paint = BashOperator(task_id="apply_paint", bash_command='echo "Applying paint"', dag=dag)
+
+# Complete the downstream flow
+assemble_frame.set_downstream(place_tires)
+assemble_frame.set_downstream(assemble_body)
+assemble_body.set_downstream(apply_paint)
+```
+
+---
+
+# Extract, Transform, and Load (ETL)
+
+---
+
+## Extract
+
+extracting data from persistent storage (e.g. Amazon S3 or a SQL database or an API) into memory
+
+- unstructured (plain text)
+- flat files
+  - row = record
+  - column = attribute
+  - e.g. `.tsv` or `.csv`
+
+---
+## Extract (*continued*)
+- JSON (JavaScript Object Notation)
+  - semi-structured
+  - atomic: `number`, `string`, `boolean`, `null`
+  - composite: `array`, `object`
+
+---
+
+## Data in databases
+
+- Applications databases
+  - transactions
+  - inserts or changes
+  - OLTP (online transaction processing)
+  - row-oriented
+
+---
+
+## Data in databases
+
+- Analytical databases
+  - OLAP (online analytical processing)
+  - column-oriented
+
+---
+
+## Extraction from databases
+
+- Connecting string / URI
+  - `postgresql://[user[:password]@][host][:port]`
+- Use in Python
+
+  ```python
+  import sqlalchemy
+  connection_uri = "postgresql://repl:password@localhost:5432/pagila"
+
+  import pandas as pd
+  pd.read_sql("SELECT * FROM customer", db_engine)
+  ```
+
+---
+
+## Transform
+
+Example: split (pandas)
+
+```python
+customer_df # Pandas DataFrame with customer data
+
+# Split email column into 2 columns on the '@' symbol
+split_email = customer_df.email.str.split("@", expand=True)
+
+# Create 2 new columns using the resulting DataFrame
+customer_df = customer_df.assign(
+  username=split_email[0],
+  domain=split_email[1]
+)
+```
+
+---
+
+## Transforming in PySpark
+
+```python
+import pyspark.sql
+spark = pyspark.sql.SparkSession.builder.getOrCreate()
+spark.read.jdbc("jdbc:postgresql://localhost:5432/pagila",
+  "customer",
+  properties={"user":"repl", "password":"password"})
+```
+
+---
+
+## Transform (*continued*)
+
+Example: join
+
+```python
+customer_df # PySpark DataFrame with customer data
+ratings_df # PySpark DataFrame with ratings data
+
+# Groupby ratings
+ratings_per_customer = ratings_df.groupBy("customer_id").mean("rating")
+
+# Join on customer ID
+customer_df.join(
+  ratings_per_customer,
+  customer_df.customer_id==ratings_per_customer.customer_id
+)
+```
