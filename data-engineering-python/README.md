@@ -594,3 +594,108 @@ customer_df.join(
   customer_df.customer_id==ratings_per_customer.customer_id
 )
 ```
+
+---
+
+## Loading
+
+- Analytics
+  - aggregate queries
+  - OLAP
+  - column-oriented
+  - quries about subset of columns
+  - parallelization
+
+---
+
+## Loading (*continued*)
+
+- Applications
+  - lots of transactions
+  - OLTP
+  - row-oriented
+  - stored per record
+  - added per transaction
+  - e.g. adding customer is fast
+
+---
+
+## MPP Databases
+
+*Massively Parallel Processing Databases*
+
+- Amazon Redshift
+- Azure SQL Data Warehouse
+- Google BigQuery
+
+---
+
+## Redshift Example
+
+Load from file to columnar storage format
+
+```python
+df.to_parquet("./s3://path/to/bucket/customer.parquet")
+df.write.parquet("./s3://path/to/bucket/customer.parquet")
+```
+
+```sql
+COPY customer
+FROM 's3://path/to/bucket/customer.parquet'
+FORMAT as parquet
+```
+
+---
+
+## Load to PostgreSQL
+
+```python
+# transformation on data
+recommendations = transform_find_recommendations(ratings_df)
+
+# load into postgreSQL database
+recommendations.to_sql("recommendations", db_engine, schema="store", if_exists="replace")
+```
+
+---
+
+## ETL Function
+
+```python
+def extract_table_to_df(tablename, db_engine):
+  return pd.read_sql("SELECT * FROM {}".format(tablename), db_engine)
+
+def split_columns_transform(df, column, pat, suffixes):
+  # Converts column into str and splits it on pat...
+
+def load_df_into_dwh(film_df, tablename, schema, db_engine):
+  return pd.to_sql(tablename, db_engine, schema=schema, if_exists="replace")
+```
+
+---
+
+## All together
+
+```python
+db_engines = { ... } # Needs to be configured
+def etl():
+  # Extract
+  film_df = extract_table_to_df("film", db_engines["store"])
+  # Transform
+  film_df = split_columns_transform(film_df, "rental_rate", ".", ["_dollar", "_cents"])
+  # Load
+  load_df_into_dwh(film_df, "film", "store", db_engines["dwh"])
+```
+
+---
+
+## DAG Definition FIle
+
+```python
+from airflow.models import DAG
+from airflow.operators.python_operator import PythonOperator
+
+dag = DAG(dag_id="etl_pipeline", schedule_interval="0 0 * * *")
+etl_task = PythonOperator(task_id="etl_task", python_callable=etl, dag=dag)
+```
+
