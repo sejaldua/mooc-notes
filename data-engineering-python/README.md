@@ -830,3 +830,56 @@ def recommendations_for_user(user_id, threshold=4.5):
 print(recommendations_for_user(12, 4.65))
 ```
 
+---
+
+# Streamlined Data Ingestion with pandas
+
+---
+
+## Introduction to flat files
+
+- Data Frames: specific structure for 2D data
+- flat files
+  - simple, easy-to-produce format
+  - data stored as plain text (no formatting)
+  - one row per line
+  - values for different fields are separated by a delimiter
+  - most common flat file type: comma-separated values (CSVs)
+- `pd.read_csv()`
+
+---
+
+## Loading CSVs
+
+```python
+import pandas as pd
+tax_data = pd.read_csv("us_tax_data.csv")
+tax_data.head(4)
+```
+
+---
+
+## Loading other flat files
+
+```python
+import pandas as pd
+tax_data = pd.read_csv("us_tax_data_2016.tsv", sep="\t")
+tax_data.head(3)
+```
+
+---
+
+## Modifying flat file imports
+
+- limiting columns with `usecols`:
+  - accepts a list of column numbers or names, or a function to filter column names
+
+```python
+col_names = ['STATEFIPS', 'STATE', 'zipcode', 'agi_stub', 'N1']
+col_nums = [0, 1, 2, 3, 4]
+# choose columns to load by name
+tax_data_v1 = pd.read_csv('us_tax_data_2016.csv', usecols=col_names)
+# choose columns to load by number
+tax_data_v2 = pd.read_csv('us_tax_data_2016.csv', usecols=col_nums)
+print(tax_data_v1.equals(tax_data_v2))
+```
