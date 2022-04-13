@@ -883,3 +883,142 @@ tax_data_v1 = pd.read_csv('us_tax_data_2016.csv', usecols=col_names)
 tax_data_v2 = pd.read_csv('us_tax_data_2016.csv', usecols=col_nums)
 print(tax_data_v1.equals(tax_data_v2))
 ```
+
+---
+
+## Modifying flat file imports (*continued*)
+
+- limiting rows with `nrows` and/or `skiprows`
+  
+```python
+tax_data_first1000 = pd.read_csv('us_tax_data_2016.csv', nrows=1000)
+```
+
+- `skiprows` accepts a list of row numbers, a number of rows, or a function to filter rows
+  - set `header=None` so pandas knows there are no column names
+
+```python
+tax_data_next500 = pd.read_csv('us_tax_data_2016.csv', nrows=500, skiprows=1000, header=None)
+```
+
+---
+
+## Assigning column names
+
+- supply column names by passing a list to the `names` argument
+  - the list MUST have a name for every column in your data
+  - if you only need to rename a few columns, do it after the import!
+
+```python
+col_names = list(tax_data_first1000)
+tax_data_next500 = pd.read_csv('us_tax_data_2016.csv', nrows=500, skiprows=1000, header=None, names=col_names)
+```
+
+---
+
+### Exercise
+
+```python
+# Create dataframe of next 500 rows with labeled columns
+vt_data_next500 = pd.read_csv("vt_tax_data_2016.csv", 
+                       		  nrows=500,
+                       		  skiprows=500,
+                       		  header=None,
+                       		  names=list(vt_data_first500))
+
+# View the Vermont dataframes to confirm they're different
+print(vt_data_first500.head())
+print(vt_data_next500.head())
+```
+
+---
+
+## Handling errors and missing data
+
+- common flat file import issues
+  - column data types are wrong
+  - values are missing
+  - records that cannot be read by `pandas`
+
+---
+
+## Handling errors and missing data (*continued*)
+
+- specifying data types
+  - use the `dtype` keyword argument, where `dtype` takes a dictionary of column names and data types
+
+    ```python
+    tax_data = pd.read_csv("us_tax_data_2016.csv", dtype={"zipcode": str})
+    ```
+
+---
+
+## Handling errors and missing data (*continued*)
+
+- customizing missing data values
+  - use the `na_values` keyword argument to set custom missing values
+  - can pass a single value, list, or dictionary of columns and values
+
+    ```python
+    tax_data = pd.read_csv("us_tax_data_2016.csv", na_values={"zipcode": 0})
+    ```
+
+---
+
+## Lines with errors
+
+- set `error_bad_lines=False` to skip unparseable records
+- set `warn_bad_lines=True` to see messages when records are skipped
+
+---
+
+### Exercise
+
+```python
+# Create dict specifying data types for agi_stub and zipcode
+data_types = {'agi_stub': 'category',
+			  'zipcode': str}
+
+# Load csv using dtype to set correct data types
+data = pd.read_csv("vt_tax_data_2016.csv", dtype=data_types)
+
+# Print data types of resulting frame
+print(data.dtypes.head())
+```
+
+---
+
+### Exercise
+
+```python
+# Create dict specifying that 0s in zipcode are NA values
+null_values = {"zipcode": 0}
+
+# Load csv using na_values keyword argument
+data = pd.read_csv("vt_tax_data_2016.csv", 
+                   na_values=null_values)
+
+# View rows with NA ZIP codes
+print(data[data.zipcode.isna()])
+```
+
+---
+
+### Exercise
+
+```python
+try:
+  # Set warn_bad_lines to issue warnings about bad records
+  data = pd.read_csv("vt_tax_data_2016_corrupt.csv", 
+                     error_bad_lines=False, 
+                     warn_bad_lines=True)
+  
+  # View first 5 records
+  print(data.head())
+  
+except pd.errors.ParserError:
+    print("Your data contained rows that could not be parsed.")
+```
+
+---
+
